@@ -6,15 +6,18 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yonsai.deploy_mcp.client.PublicClient;
 import com.yonsai.deploy_mcp.client.TestClient;
+import com.yonsai.deploy_mcp.service.PublicDataService;
 
 import tools.jackson.databind.JsonNode;
 
-@RestController
+@Controller
 public class HomeController {
 
   @Autowired
@@ -26,15 +29,14 @@ public class HomeController {
   @Autowired
   private PublicClient 공공데이터자동코드담당자;
 
-  @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
+  @Autowired
+  private PublicDataService service;
+
+  @GetMapping("/")
   public String home() {
-    System.out.println("실행 전");
-    List<Map<String, Object>> 결과 = 자동코드작성담당자.getPosts();
-
-    System.out.println("실행 후");
-
-    // 맵타일을 문자로 변경해서 브라우저로 보내기!
-    return 결과.toString();
+    System.out.println("HomeController - home()");
+    
+    return "index";
   }
 
   @GetMapping(value = "/data")
@@ -89,4 +91,16 @@ public class HomeController {
  * 1. main 파일에 가서 @EnableFeignClients 추가하기
  * 2. 외부 서버에서 할 일 데이터 1개를 가져오는 코드를 작성한다.
  * 규칙이 바뀌면 안되기 때문에 인터페이스로 고정!
+@GetMapping("/")
+  public String home() {
+    //System.out.println("실행 전");
+    // List<Map<String, Object>> 결과 = 자동코드작성담당자.getPosts();
+
+    //service.getLoan();
+    //System.out.println("실행 후");
+
+    // 맵타일을 문자로 변경해서 브라우저로 보내기!
+    return "결과.toString()";
+  }
+
  */

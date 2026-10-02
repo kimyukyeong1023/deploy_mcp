@@ -13,7 +13,7 @@ import tools.jackson.databind.JsonNode;
 public interface PublicClient {
 
   @GetMapping("/getOrdinaryFinanceInfo")
-  JsonNode getLoan(
+  public  JsonNode getLoan(
       @RequestParam("serviceKey") String serviceKey,
       @RequestParam("pageNo") String pageNo,
       @RequestParam("numOfRows") String numOfRows,
