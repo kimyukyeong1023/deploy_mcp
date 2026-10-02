@@ -12,42 +12,59 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yonsai.deploy_mcp.client.PublicClient;
 import com.yonsai.deploy_mcp.client.TestClient;
 
+import tools.jackson.databind.JsonNode;
+
 @RestController
 public class HomeController {
 
-    @Autowired
-    private TestClient 자동코드작성담당자;
+  @Autowired
+  private TestClient 자동코드작성담당자;
 
-    @Value("${service-key}")
-    private String serviceKey;
+  @Value("${service-key}")
+  private String serviceKey;
 
-    @Autowired
-    private PublicClient 공공데이터자동코드담당자;
+  @Autowired
+  private PublicClient 공공데이터자동코드담당자;
 
-    @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
-    public String home() {
-        System.out.println("실행 전");
-        List<Map<String, Object>> 결과 = 자동코드작성담당자.getPosts();
+  @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
+  public String home() {
+    System.out.println("실행 전");
+    List<Map<String, Object>> 결과 = 자동코드작성담당자.getPosts();
 
-        System.out.println("실행 후");
+    System.out.println("실행 후");
 
-        // 맵타일을 문자로 변경해서 브라우저로 보내기!
-        return 결과.toString();
+    // 맵타일을 문자로 변경해서 브라우저로 보내기!
+    return 결과.toString();
+  }
+
+  @GetMapping(value = "/data")
+  public String publicData() {
+
+    System.out.println("공공데이터 호출 전!");
+
+    JsonNode 결과 = 공공데이터자동코드담당자
+        .getLoan(serviceKey,
+            "1",
+            "10",
+            "json");
+
+    // 필요한 부분만 꺼내기(경로로 바로 접근)
+    JsonNode 파싱결과 = 결과.at("/response/body/items/item");
+    System.out.println("공공데이터 호출 후 !");
+
+    String 결과정리 = "";
+
+    for (JsonNode 상품한개 : 파싱결과) {
+
+      결과정리 += 상품한개.get("finPrdNm").asString();
+      결과정리 += " / ";
+      결과정리 += "최대 한도: " + 상품한개.get("lnLmt").asString();
+      결과정리 += "</br>"; // 줄바꿈 기호!
+      System.out.println(결과정리);
     }
 
-    @GetMapping(value = "/data", produces = MediaType.TEXT_HTML_VALUE)
-    public String publicData() {
-        System.out.println("공공데이터 호출 전 ");
-
-        Map<String, Object> 결과 = 공공데이터자동코드담당자
-                .getLoan(serviceKey,
-                        "1",
-                        "10",
-                        "json");
-        System.out.println("공공데이터 호출 전 ");
-
-        return 결과.toString();
-    }
+    return 결과정리;
+  }
 
 }
 
