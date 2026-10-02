@@ -7,4 +7,4 @@ spring:
       chat:
         model: gpt-4o-mini
 
-service-key: ${TOURIST_API_KEY}
+service-key: ${SERVICE_KEY}
